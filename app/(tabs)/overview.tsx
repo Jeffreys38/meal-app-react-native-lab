@@ -6,6 +6,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import Foundation from '@expo/vector-icons/Foundation';
 
 export default function Tab() {
+
     return (
         <SafeAreaView style={{backgroundColor: 'black'}}>
            <ScrollView>

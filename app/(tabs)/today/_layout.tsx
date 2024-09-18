@@ -13,6 +13,16 @@ export default function SettingLayout() {
                 },
                 headerTintColor: 'white'
             }} />
+            <Drawer.Screen name="settings" options={{
+                title: 'Settings',
+                headerStyle: {
+                    backgroundColor: 'black',
+                },
+                headerTitleStyle: {
+                    color: 'white'
+                },
+                headerTintColor: 'white'
+            }} />
         </Drawer>
     );
 }
