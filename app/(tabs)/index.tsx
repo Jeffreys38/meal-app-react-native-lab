@@ -1,31 +1,43 @@
-import { StyleSheet } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, FlatList, StyleSheet, SafeAreaView} from 'react-native';
+import Header from '@/components/Header';
+import {categoryList} from "@/helpers/API";
+import {CategoryItem} from '@/components/CategoryItem';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+const renderCategory = ({ item, index }: { item: any, index: number }) =>
+    <CategoryItem
+        href={`/category/${item.categoryName}`}
+        style={{marginTop: index === 0 ? 0 : 20}}
+        name={item.categoryName}
+        image={item.categoryThumb}
+        description={item.categoryDescription?.length > 200 ? item.categoryDescription.slice(0, 200) + "..." : item.categoryDescription}
+    />;
 
-export default function TabOneScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
-  );
+export default function Tab() {
+    const [list, setList] = useState<any[]>([]);
+
+    useEffect(() => {
+        setList(categoryList)
+    }, []);
+
+    return (
+        <View style={{flex: 1}}>
+            <Header
+                title={"Discover"}
+                logo={"https://img.freepik.com/free-vector/bird-colorful-logo-gradient-vector_343694-1365.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1726444800&semt=ais_hybrid"}
+            />
+            <FlatList
+                contentContainerStyle={{ paddingBottom: 50 }}
+                style={styles.container}
+                data={list}
+                renderItem={renderCategory} />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+    container: {
+        padding: 10,
+        marginBottom: 100,
+    },
 });

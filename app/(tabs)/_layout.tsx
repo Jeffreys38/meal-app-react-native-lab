@@ -1,59 +1,100 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Entypo from '@expo/vector-icons/Entypo';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import {Tabs} from 'expo-router';
+import {ViewStyle, View, Platform} from 'react-native';
+import React from "react";
 
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+const iconSize = 24;
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+const icons = {
+    home: <Entypo name="home" size={iconSize}/>,
+    earth: <FontAwesome6 name="earth-africa" size={iconSize}/>,
+    book: <AntDesign name="book" size={iconSize}/>,
+    user: <FontAwesome6 name="user" size={iconSize}/>
+};
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+    return (
+        <Tabs
+            screenOptions={{
+                tabBarActiveTintColor: 'white',
+                tabBarStyle: styles.tabBarStyle,
+                tabBarItemStyle: styles.tabBarItemStyle,
+            }}
+        >
+            <Tabs.Screen
+                name="index"
+                options={{
+                    headerShown: false,
+                    title: '',
+                    tabBarIcon: ({focused}) => (
+                        <TabIcon focused={focused} icon={icons.home}/>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="today"
+                options={{
+                    title: '',
+                    headerShown: false,
+                    tabBarIcon: ({focused}) => (
+                        <TabIcon focused={focused} icon={icons.book}/>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="settings"
+                options={{
+                    title: '',
+                    headerShown: false,
+                    tabBarIcon: ({focused}) => (
+                        <TabIcon focused={focused} icon={icons.earth}/>
+                    ),
+                }}
+            />
+        </Tabs>
+    );
 }
+
+const TabIcon = ({focused, icon}: { focused: boolean, icon: any }) => {
+    return (
+        <View style={[focused ? styles.focusedTabStyle : null]}>
+            {React.cloneElement(icon, {color: focused ? 'black' : 'white'})}
+        </View>
+    );
+};
+
+const styles = {
+    tabBarStyle: {
+        position: "absolute",
+        bottom: 20,
+        backgroundColor: 'black',
+        borderRadius: 40,
+        width: "92%",
+        height: 70,
+        left: "3.5%",
+        borderWidth: 0,
+        borderTopColor: "white",
+        right: "3.5%",
+    } as ViewStyle,
+
+    tabBarItemStyle: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        ...Platform.select({
+            ios: {
+                marginBottom: 5,
+            }
+        })
+    } as ViewStyle,
+
+    focusedTabStyle: {
+        position: 'absolute',
+        backgroundColor: 'white',
+        borderRadius: 50,
+        padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    } as ViewStyle
+};
